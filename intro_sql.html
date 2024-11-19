@@ -356,8 +356,8 @@ display: none;
 <h1><strong>Introduction to SQL</strong></h1>
 <ul>
 <li><a href="#what-is-sql">What is SQL</a></li>
-<li><a href="#database-for-this-workshop">Database for this
-workshop</a></li>
+<li><a href="#database-for-this-tutorial">Database for this
+tutorial</a></li>
 <li><a href="#comments-in-sql">Comments in SQL</a></li>
 <li><a href="#select"><code>SELECT</code></a></li>
 <li><a href="#limit"><code>LIMIT</code></a></li>
@@ -383,7 +383,7 @@ exercises</a></li>
 <h2>What is SQL?</h2>
 <p>SQL, which is an acronym for Structured Query Language, is a language
 widely used to interact with most relational databases. You can create,
-query, update, and delete databases using SQL. This workshop focuses on
+query, update, and delete databases using SQL. This tutorial focuses on
 querying databases.</p>
 <p>If you have experience with <code>dplyr</code> in R or
 <code>Pandas</code> in Python, you’ll find that SQL is similar in many
@@ -401,8 +401,8 @@ of SQL syntax</a>, such as MySQL, PostgreSQL, and SQLite. However, most
 of the syntax, particularly basic syntax, is very similar across
 dialects.</p>
 </div>
-<div id="database-for-this-workshop" class="section level2">
-<h2>Database for this workshop</h2>
+<div id="database-for-this-tutorial" class="section level2">
+<h2>Database for this tutorial</h2>
 <p>We’re working with the <code>hospital</code> database from <a href="https://www.sql-practice.com/">sql-practice.com</a>. You can find
 the schema (the set of tables, their columns and types, and the
 relationships between them) in the left side bar &gt; SQL Database &gt;
@@ -422,7 +422,7 @@ SELECT * from patients; -- another single line comment</code></pre>
 <div id="exercise-1" class="section level3">
 <h3>Exercise 1</h3>
 <p>Take a look at the schema of the database. Think about a query that
-you would like to be able to make at the end of this workshop. Write
+you would like to be able to make at the end of this tutorial. Write
 down that query and the steps that you think you would need to take
 using a comment.</p>
 </div>
@@ -600,8 +600,7 @@ specific row and column. You can test for <code>NULL</code> with
 <pre class="sql"><code>SELECT *
 FROM patients
 WHERE patient_id IS NULL;</code></pre>
-<p>Note that <code>NULL</code> is different than an empty string
-(’’).</p>
+<p>Note that <code>NULL</code> is different than an empty string.</p>
 <p>There is also the opposite: <code>IS NOT NULL</code>.</p>
 <p>You cannot use <code>= NULL</code>. The following returns no rows,
 even though there are rows with <code>NULL</code> allergies:</p>
@@ -690,8 +689,8 @@ the values (or other values) that you are selecting, not the
 <pre class="sql"><code>SELECT *
 FROM patients
 WHERE height = MAX(height);</code></pre>
-<p>To achieve this, you can use a subquery, which we may learn about
-later.</p>
+<p>To achieve this, you can use a subquery (which is covered in the
+intermediate SQL tutorial).</p>
 <p>If we wanted to count the number of distinct values in a column, we
 can use the count function in combination with
 <code>distinct</code>:</p>
@@ -760,7 +759,7 @@ cities associated with them.</p>
 <div id="aliasing" class="section level2">
 <h2>Aliasing</h2>
 <p>You can rename columns and tables in queries. This will mostly be
-useful when we’re joining tables together, but it can also be useful
+useful when you’re joining tables together, but it can also be useful
 when you’re working with functions. Or simply for convenience in looking
 at the output.</p>
 <pre class="sql"><code>SELECT first_name, COUNT(*) AS patient_count
@@ -804,9 +803,9 @@ databases workshop</a> taught by <a href="https://www.it.northwestern.edu/depart
 Computing and Data Services at Northwestern University</a>, as well as
 by this <a href="https://sites.northwestern.edu/researchcomputing/resource-guides/resource-guide-sql/">resource
 guide</a>. You can check them out to continue learning! 🧠💪</p>
-<p>One key aspect that this workshop didn’t cover is how to connect to a
+<p>One key aspect that this tutorial didn’t cover is how to connect to a
 database. We used <a href="https://www.sql-practice.com/">sql-practice.com</a>, which makes
-it very easy to run SQL in a web browser for an introductory workshop.
+it very easy to run SQL in a web browser for an introductory tutorial.
 But in research, you’ll probably be connecting to a database from a
 programming language like R or Python. Here you can see <a href="https://github.com/nuitrcs/databases_workshop/blob/master/r/r_databases.Rmd">how
 to connect to a database using the <code>DBI</code> package in R</a> and
