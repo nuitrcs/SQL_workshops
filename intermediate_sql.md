@@ -1,6 +1,6 @@
 # **Intermediate SQL**
 
-* [Database for this workshop](#database-for-this-workshop)
+* [Database for this tutorial](#database-for-this-tutorial)
 * [Joins](#joins)
 * [Table Names and Aliases](#table-names-and-aliases)
 * [`UNION`, `EXCEPT`, and `INTERSECT`](#union-except-and-intersect)
@@ -10,9 +10,9 @@
 * [Recap and resources to continue learning](#recap-and-resources-to-continue-learning)
 * [Answers to the exercises](#answers-to-the-exercises)
 
-This tutorial assumes previous knowledge at the level of the introduction to SQL tutorial available in [this GitHub repository](https://github.com/nuitrcs/SQL_workshops).
+This tutorial assumes previous knowledge at the level of the [introduction to SQL tutorial](https://nuitrcs.github.io/SQL_workshops/intro_sql.html) available in [this GitHub repository](https://github.com/nuitrcs/SQL_workshops).
 
-## Database for this workshop
+## Database for this tutorial
 
 We're working with the `hospital` database from [sql-practice.com](https://www.sql-practice.com/). You can find the schema (the set of tables, their columns and types, and the relationships between them) in the left side bar > SQL Database > View Schema.
 
@@ -20,7 +20,7 @@ We're working with the `hospital` database from [sql-practice.com](https://www.s
 
 Looking at the database schema, we can see that information is split between four tables.  The lines between the tables show where there is a column in one table that is linked to a column in another table.  These are called foreign keys. Foreign keys are used to link records in different tables.
 
-In the table names, there are key icons next to some columns.  These columns are primary key columns. Primary keys uniquely identify records in the table they belong to.  A primary key can be a single column or a combination of multiple columns.  Primary keys have to have unique values.  They are frequently used to link tables to each other (although you could link tables with other columns too).
+In the table names, there are key icons next to some columns.  These columns are primary key columns. Primary keys uniquely identify records in the table they belong to.  A primary key can be a single column or a combination of multiple columns.  Primary keys must have unique values.  They are frequently used to link tables to each other (although you could link tables with other columns too).
 
 Now we'll learn how to join tables together. Diagrams such as [this one](https://images.app.goo.gl/U5RCPEhNaQuMn7y7A) can be useful to understand the different types of joins. Please note that you can join more than two tables together.
 
@@ -45,7 +45,7 @@ FROM patients
 INNER JOIN admissions ON patients.patient_id = admissions.patient_id;
 ```
 
-Note that both tables have a column called patient\_id.  We add the table name to the front of the column name when referencing them. You can do this anytime, but typically only do it when you're joining and there's ambiguity. 
+Note that both tables have a column called patient\_id.  We add the table name to the front of the column name when referencing them. You can do this anytime, but you typically only do it when you're joining tables and there's ambiguity. 
 
 We can also group by, order by, and use other where clause conditions on the joined tables.  
 
@@ -104,8 +104,8 @@ RIGHT JOIN admissions a ON p.patient_id = a.patient_id;
 
 ### Exercise 3 
 
-a) Select the patient\_id of patients attended by a cardiologist.
-b) Select the first and last name of patients who have been admitted, but don't have a diagnosis record.
+a) Select the patient\_id and diagnosis of all patients in the database (even if the diagnosis is missing).
+b) Are there doctors who have not seen a patient?
 
 ### `FULL OUTER JOIN`
 
@@ -193,7 +193,7 @@ This will return only the patient\_ids that are in both tables.
 #### Exercise 7
 
 a) Get a list of first\_name values that are common between the patients and doctors tables.
-b) Get the province\_ids that appear in both the patients and province\_names tables, ensuring the provinces are referenced in both tables.
+b) Get the province\_ids that appear in both the patients and province\_names tables.
 
 ## Subqueries
 
@@ -214,7 +214,7 @@ FROM patients
 WHERE height = (SELECT MAX(HEIGHT) FROM patients);
 ```
 
-The subquery is executed first, and then the result is used the broader query.
+The subquery is executed first, and then the result is used in the broader query.
 
 We can also use subqueries with `IN`:
 
@@ -228,7 +228,7 @@ WHERE patient_id IN (
 );
 ```
 
-But you can also do the above query by joining tables together.  (`IN` is an expensive operation, meaning it can take a long time to run in large databases.)
+But you can also do the above query by joining tables together.  (`IN` is an expensive operation--it can take a long time to run in large databases.)
 
 ### Exercise 8
 
@@ -255,13 +255,21 @@ Please note that you can create several CTE by separating them with a comma.
 ### Exercise 9
 
 a) Create a CTE to list the patient\_ids of patients admitted in 2019, and then use it to retrieve first\_name, last\_name, and city of these patients from the patients table.
-b) Using a CTE, find the number of admissions each doctor has attended. Then, list each doctor\_id, first\_name, last\_name, and the admission count. Only show doctors who have attended more than 5 admissions.
+b) Using a CTE, find the number of admissions each doctor has attended. Then, list each doctor\_id, first\_name, last\_name, and the admission count. Only show doctors who have attended more than 200 admissions.
 
 ## Window Functions
 
-Window functions allow you to perform calculations across a set of rows that are related to the current row, without collapsing rows into a single result (in contrast to aggregate functions). They’re helpful when you need calculations like running totals, rank, or moving averages.
+Window functions are special functions that let you perform calculations across a group of related rows while still keeping each row separate. Unlike aggregate functions (like `SUM` or `COUNT`), which combine multiple rows into one result, window functions keep all rows in your result and add extra calculated data to each.
 
-In SQL, a window function is typically paired with an `OVER` clause, which defines the "window" of rows to include in the calculation.
+For example, you can use window functions to:
+
+- Calculate running totals: Add up values row by row, showing the total so far for each row.
+- Rank rows: Assign a ranking number to each row based on certain criteria.
+- Find moving averages: Calculate the average of a specific number of rows (like the last 3 rows) for each row.
+
+Window functions are useful when you need calculations like these, but you still want to see all the original rows in your output.
+
+A window function is paired with an `OVER` clause, which defines the "window" of rows to include in the calculation.
 
 ### Basic Syntax
 
@@ -295,7 +303,7 @@ This assigns a unique row number to each record, ordered by admission\_date.
 
 If there are ties (i.e., rows with identical values in admission\_date), `ROW_NUMBER()` does not treat them the same way. Instead, it assigns unique numbers in the order they appear, effectively "breaking" ties arbitrarily (often based on internal row ordering in the database).
 
-#### Example: Partitioning with `PARTITION BY`
+#### Partitioning with `PARTITION BY`
 
 The `PARTITION BY` clause breaks the data into groups, and the window function is applied to each group independently.
 
@@ -314,11 +322,11 @@ This query assigns a rank to each patient within their province based on admissi
 
 #### Example: Moving Average
 
-Window functions also support calculations across a “moving” window of rows.
+Window functions support calculations across a “moving” window of rows.
 
-To calculate a moving average, you can use `ROWS` or `RANGE` within the `OVER` clause. `ROWS` and `RANGE` differ in how they define the window over which calculations are performed. `ROWS` defines the window strictly based on the physical order and number of rows relative to the current row. This is particularly useful when you want an exact number of adjacent rows (e.g., the previous two rows), regardless of their values in relation to each other. `RANGE` defines the window based on the values of the ordering column rather than the exact number of rows. This approach is useful when working with time-series data, as it allows you to include rows within a specific range of values, not just the closest rows.
+To calculate a moving average, you can use `ROWS` or `RANGE` within the `OVER` clause. `ROWS` and `RANGE` differ in how they define the window over which calculations are performed. `ROWS` defines the window strictly based on the physical order and number of rows relative to the current row. This is particularly useful when you want an exact number of adjacent rows (e.g., the previous two rows), regardless of their values in relation to each other. `RANGE` defines the window based on the values of the ordering column rather than the exact number of rows. This approach is useful when you want to include rows within a specific range of values, not just the closest rows.
 
-Calculations across a "moving" window of rows can be useful for calculating trends, such as average admissions over time. For example, to calculate a moving average of 3 admissions, including the current row and the previous two rows:
+Calculations across a "moving" window of rows can be useful for calculating trends, such as average admissions over time. For example, this is how you could calculate a moving average of 3 admissions, including the current row and the previous two rows:
 
 ```sql
 WITH daily_admissions AS (
@@ -344,7 +352,7 @@ c) Get the top three oldest patients in each province by birth\_date. Show provi
 
 This tutorial provided an overview of intermediate SQL. While this is a good place to start using SQL in real life, there are more things to learn! This tutorial draws from a longer [Introduction to databases workshop](https://github.com/nuitrcs/databases_workshop) taught by [Research Computing and Data Services at Northwestern University](https://www.it.northwestern.edu/departments/it-services-support/research/), as well as by this [resource guide](https://sites.northwestern.edu/researchcomputing/resource-guides/resource-guide-sql/) and ChatGPT. You can check them out to continue learning! 🧠💪
 
-One key aspect that this workshop didn't cover is how to connect to a database. We used [sql-practice.com](https://www.sql-practice.com/), which makes it very easy to run SQL in a web browser for an introductory workshop. But in research, you'll probably be connecting to a database from a programming language like R or Python. Here you can see [how to connect to a database using the `DBI` package in R](https://github.com/nuitrcs/databases_workshop/blob/master/r/r_databases.Rmd) and [how to connect to a database using the `psycopg2` package in Python](https://github.com/nuitrcs/databases_workshop/blob/master/python/postgresql_from_python.ipynb). If you are affiliated with Northwestern University and you run into a problem during your research, you can always [submit a consult request](https://services.northwestern.edu/TDClient/30/Portal/Requests/ServiceDet?ID=93).
+One key aspect that this tutorial didn't cover is how to connect to a database. We used [sql-practice.com](https://www.sql-practice.com/), which makes it very easy to run SQL in a web browser for an introductory tutorial. But in research, you'll probably be connecting to a database from a programming language like R or Python. Here you can see [how to connect to a database using the `DBI` package in R](https://github.com/nuitrcs/databases_workshop/blob/master/r/r_databases.Rmd) and [how to connect to a database using the `psycopg2` package in Python](https://github.com/nuitrcs/databases_workshop/blob/master/python/postgresql_from_python.ipynb). If you are affiliated with Northwestern University and you run into a problem during your research, you can always [submit a consult request](https://services.northwestern.edu/TDClient/30/Portal/Requests/ServiceDet?ID=93).
 
 ## Answers to the exercises
 
@@ -378,19 +386,18 @@ INNER JOIN doctors ON admissions.attending_doctor_id = doctors.doctor_id;
 a)
 
 ```sql
-SELECT a.patient_id
-FROM doctors d
-LEFT JOIN admissions a ON d.doctor_id = a.attending_doctor_id
-WHERE d.specialty = 'Cardiologist';
+SELECT p.patient_id, diagnosis
+FROM patients p
+LEFT JOIN admissions a ON p.patient_id = a.patient_id;
 ```
 
 b)
 
 ```sql
-SELECT p.first_name, p.last_name
-FROM admissions a
-RIGHT JOIN patients p ON a.patient_id = p.patient_id
-WHERE a.diagnosis IS NULL;
+SELECT *
+FROM doctors d 
+LEFT JOIN admissions a ON d.doctor_id = a.attending_doctor_id
+WHERE patient_id IS NULL;
 ```
 
 ### Exercise 4
@@ -497,7 +504,7 @@ WITH doctor_admission_counts AS (
 SELECT d.doctor_id, d.first_name, d.last_name, dac.admission_count
 FROM doctors d
 JOIN doctor_admission_counts dac ON d.doctor_id = dac.attending_doctor_id
-WHERE dac.admission_count > 5;
+WHERE dac.admission_count > 200;
 ```
 
 ### Exercise 10
@@ -524,8 +531,8 @@ c)
 SELECT p.province_id, p.patient_id, p.first_name, p.last_name, p.birth_date
 FROM (
   SELECT province_id, patient_id, first_name, last_name, birth_date,
-         ROW_NUMBER() OVER (PARTITION BY province_id ORDER BY birth_date) AS rank
+         ROW_NUMBER() OVER (PARTITION BY province_id ORDER BY birth_date) AS my_rank
   FROM patients
 ) p
-WHERE rank <= 3;
+WHERE my_rank <= 3;
 ```

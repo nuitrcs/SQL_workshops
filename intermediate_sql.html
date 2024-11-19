@@ -355,8 +355,8 @@ display: none;
 <div id="intermediate-sql" class="section level1">
 <h1><strong>Intermediate SQL</strong></h1>
 <ul>
-<li><a href="#database-for-this-workshop">Database for this
-workshop</a></li>
+<li><a href="#database-for-this-tutorial">Database for this
+tutorial</a></li>
 <li><a href="#joins">Joins</a></li>
 <li><a href="#table-names-and-aliases">Table Names and Aliases</a></li>
 <li><a href="#union-except-and-intersect"><code>UNION</code>,
@@ -370,11 +370,11 @@ resources to continue learning</a></li>
 <li><a href="#answers-to-the-exercises">Answers to the
 exercises</a></li>
 </ul>
-<p>This tutorial assumes previous knowledge at the level of the
-introduction to SQL tutorial available in <a href="https://github.com/nuitrcs/SQL_workshops">this GitHub
+<p>This tutorial assumes previous knowledge at the level of the <a href="https://nuitrcs.github.io/SQL_workshops/intro_sql.html">introduction
+to SQL tutorial</a> available in <a href="https://github.com/nuitrcs/SQL_workshops">this GitHub
 repository</a>.</p>
-<div id="database-for-this-workshop" class="section level2">
-<h2>Database for this workshop</h2>
+<div id="database-for-this-tutorial" class="section level2">
+<h2>Database for this tutorial</h2>
 <p>We’re working with the <code>hospital</code> database from <a href="https://www.sql-practice.com/">sql-practice.com</a>. You can find
 the schema (the set of tables, their columns and types, and the
 relationships between them) in the left side bar &gt; SQL Database &gt;
@@ -390,9 +390,9 @@ different tables.</p>
 <p>In the table names, there are key icons next to some columns. These
 columns are primary key columns. Primary keys uniquely identify records
 in the table they belong to. A primary key can be a single column or a
-combination of multiple columns. Primary keys have to have unique
-values. They are frequently used to link tables to each other (although
-you could link tables with other columns too).</p>
+combination of multiple columns. Primary keys must have unique values.
+They are frequently used to link tables to each other (although you
+could link tables with other columns too).</p>
 <p>Now we’ll learn how to join tables together. Diagrams such as <a href="https://images.app.goo.gl/U5RCPEhNaQuMn7y7A">this one</a> can be
 useful to understand the different types of joins. Please note that you
 can join more than two tables together.</p>
@@ -420,8 +420,8 @@ FROM patients
 INNER JOIN admissions ON patients.patient_id = admissions.patient_id;</code></pre>
 <p>Note that both tables have a column called patient_id. We add the
 table name to the front of the column name when referencing them. You
-can do this anytime, but typically only do it when you’re joining and
-there’s ambiguity.</p>
+can do this anytime, but you typically only do it when you’re joining
+tables and there’s ambiguity.</p>
 <p>We can also group by, order by, and use other where clause conditions
 on the joined tables.</p>
 </div>
@@ -469,9 +469,9 @@ RIGHT JOIN admissions a ON p.patient_id = a.patient_id;</code></pre>
 <div id="exercise-3" class="section level3">
 <h3>Exercise 3</h3>
 <ol style="list-style-type: lower-alpha">
-<li>Select the patient_id of patients attended by a cardiologist.</li>
-<li>Select the first and last name of patients who have been admitted,
-but don’t have a diagnosis record.</li>
+<li>Select the patient_id and diagnosis of all patients in the database
+(even if the diagnosis is missing).</li>
+<li>Are there doctors who have not seen a patient?</li>
 </ol>
 </div>
 <div id="full-outer-join" class="section level3">
@@ -573,8 +573,7 @@ FROM admissions;</code></pre>
 <li>Get a list of first_name values that are common between the patients
 and doctors tables.</li>
 <li>Get the province_ids that appear in both the patients and
-province_names tables, ensuring the provinces are referenced in both
-tables.</li>
+province_names tables.</li>
 </ol>
 </div>
 </div>
@@ -590,7 +589,7 @@ WHERE height = MAX(height);</code></pre>
 <pre class="sql"><code>SELECT *
 FROM patients
 WHERE height = (SELECT MAX(HEIGHT) FROM patients);</code></pre>
-<p>The subquery is executed first, and then the result is used the
+<p>The subquery is executed first, and then the result is used in the
 broader query.</p>
 <p>We can also use subqueries with <code>IN</code>:</p>
 <pre class="sql"><code>SELECT first_name, last_name
@@ -601,8 +600,8 @@ WHERE patient_id IN (
   WHERE admission_date BETWEEN &#39;2018-01-01&#39; AND &#39;2018-12-31&#39;
 );</code></pre>
 <p>But you can also do the above query by joining tables together.
-(<code>IN</code> is an expensive operation, meaning it can take a long
-time to run in large databases.)</p>
+(<code>IN</code> is an expensive operation–it can take a long time to
+run in large databases.)</p>
 <div id="exercise-8" class="section level3">
 <h3>Exercise 8</h3>
 <p>Using subqueries, find the first_name and last_name of patients who
@@ -635,19 +634,32 @@ and then use it to retrieve first_name, last_name, and city of these
 patients from the patients table.</li>
 <li>Using a CTE, find the number of admissions each doctor has attended.
 Then, list each doctor_id, first_name, last_name, and the admission
-count. Only show doctors who have attended more than 5 admissions.</li>
+count. Only show doctors who have attended more than 200
+admissions.</li>
 </ol>
 </div>
 </div>
 <div id="window-functions" class="section level2">
 <h2>Window Functions</h2>
-<p>Window functions allow you to perform calculations across a set of
-rows that are related to the current row, without collapsing rows into a
-single result (in contrast to aggregate functions). They’re helpful when
-you need calculations like running totals, rank, or moving averages.</p>
-<p>In SQL, a window function is typically paired with an
-<code>OVER</code> clause, which defines the “window” of rows to include
-in the calculation.</p>
+<p>Window functions are special functions that let you perform
+calculations across a group of related rows while still keeping each row
+separate. Unlike aggregate functions (like <code>SUM</code> or
+<code>COUNT</code>), which combine multiple rows into one result, window
+functions keep all rows in your result and add extra calculated data to
+each.</p>
+<p>For example, you can use window functions to:</p>
+<ul>
+<li>Calculate running totals: Add up values row by row, showing the
+total so far for each row.</li>
+<li>Rank rows: Assign a ranking number to each row based on certain
+criteria.</li>
+<li>Find moving averages: Calculate the average of a specific number of
+rows (like the last 3 rows) for each row.</li>
+</ul>
+<p>Window functions are useful when you need calculations like these,
+but you still want to see all the original rows in your output.</p>
+<p>A window function is paired with an <code>OVER</code> clause, which
+defines the “window” of rows to include in the calculation.</p>
 <div id="basic-syntax" class="section level3">
 <h3>Basic Syntax</h3>
 <p>The basic syntax of a window function is:</p>
@@ -681,8 +693,8 @@ way. Instead, it assigns unique numbers in the order they appear,
 effectively “breaking” ties arbitrarily (often based on internal row
 ordering in the database).</p>
 </div>
-<div id="example-partitioning-with-partition-by" class="section level4">
-<h4>Example: Partitioning with <code>PARTITION BY</code></h4>
+<div id="partitioning-with-partition-by" class="section level4">
+<h4>Partitioning with <code>PARTITION BY</code></h4>
 <p>The <code>PARTITION BY</code> clause breaks the data into groups, and
 the window function is applied to each group independently.</p>
 <p>For example, if we want to rank patients by their admission date
@@ -698,8 +710,8 @@ on admission_date.</p>
 </div>
 <div id="example-moving-average" class="section level4">
 <h4>Example: Moving Average</h4>
-<p>Window functions also support calculations across a “moving” window
-of rows.</p>
+<p>Window functions support calculations across a “moving” window of
+rows.</p>
 <p>To calculate a moving average, you can use <code>ROWS</code> or
 <code>RANGE</code> within the <code>OVER</code> clause.
 <code>ROWS</code> and <code>RANGE</code> differ in how they define the
@@ -709,13 +721,13 @@ relative to the current row. This is particularly useful when you want
 an exact number of adjacent rows (e.g., the previous two rows),
 regardless of their values in relation to each other. <code>RANGE</code>
 defines the window based on the values of the ordering column rather
-than the exact number of rows. This approach is useful when working with
-time-series data, as it allows you to include rows within a specific
-range of values, not just the closest rows.</p>
+than the exact number of rows. This approach is useful when you want to
+include rows within a specific range of values, not just the closest
+rows.</p>
 <p>Calculations across a “moving” window of rows can be useful for
 calculating trends, such as average admissions over time. For example,
-to calculate a moving average of 3 admissions, including the current row
-and the previous two rows:</p>
+this is how you could calculate a moving average of 3 admissions,
+including the current row and the previous two rows:</p>
 <pre class="sql"><code>WITH daily_admissions AS (
   SELECT admission_date,
          COUNT(patient_id) AS admissions_count
@@ -754,9 +766,9 @@ Computing and Data Services at Northwestern University</a>, as well as
 by this <a href="https://sites.northwestern.edu/researchcomputing/resource-guides/resource-guide-sql/">resource
 guide</a> and ChatGPT. You can check them out to continue learning!
 🧠💪</p>
-<p>One key aspect that this workshop didn’t cover is how to connect to a
+<p>One key aspect that this tutorial didn’t cover is how to connect to a
 database. We used <a href="https://www.sql-practice.com/">sql-practice.com</a>, which makes
-it very easy to run SQL in a web browser for an introductory workshop.
+it very easy to run SQL in a web browser for an introductory tutorial.
 But in research, you’ll probably be connecting to a database from a
 programming language like R or Python. Here you can see <a href="https://github.com/nuitrcs/databases_workshop/blob/master/r/r_databases.Rmd">how
 to connect to a database using the <code>DBI</code> package in R</a> and
@@ -798,17 +810,16 @@ INNER JOIN doctors ON admissions.attending_doctor_id = doctors.doctor_id;</code>
 <ol style="list-style-type: lower-alpha">
 <li></li>
 </ol>
-<pre class="sql"><code>SELECT a.patient_id
-FROM doctors d
-LEFT JOIN admissions a ON d.doctor_id = a.attending_doctor_id
-WHERE d.specialty = &#39;Cardiologist&#39;;</code></pre>
+<pre class="sql"><code>SELECT p.patient_id, diagnosis
+FROM patients p
+LEFT JOIN admissions a ON p.patient_id = a.patient_id;</code></pre>
 <ol start="2" style="list-style-type: lower-alpha">
 <li></li>
 </ol>
-<pre class="sql"><code>SELECT p.first_name, p.last_name
-FROM admissions a
-RIGHT JOIN patients p ON a.patient_id = p.patient_id
-WHERE a.diagnosis IS NULL;</code></pre>
+<pre class="sql"><code>SELECT *
+FROM doctors d 
+LEFT JOIN admissions a ON d.doctor_id = a.attending_doctor_id
+WHERE patient_id IS NULL;</code></pre>
 </div>
 <div id="exercise-4-1" class="section level3">
 <h3>Exercise 4</h3>
@@ -900,7 +911,7 @@ WHERE patient_id IN (SELECT patient_id FROM admissions_2019);</code></pre>
 SELECT d.doctor_id, d.first_name, d.last_name, dac.admission_count
 FROM doctors d
 JOIN doctor_admission_counts dac ON d.doctor_id = dac.attending_doctor_id
-WHERE dac.admission_count &gt; 5;</code></pre>
+WHERE dac.admission_count &gt; 200;</code></pre>
 </div>
 <div id="exercise-10-1" class="section level3">
 <h3>Exercise 10</h3>
@@ -922,10 +933,10 @@ FROM patients p;</code></pre>
 <pre class="sql"><code>SELECT p.province_id, p.patient_id, p.first_name, p.last_name, p.birth_date
 FROM (
   SELECT province_id, patient_id, first_name, last_name, birth_date,
-         ROW_NUMBER() OVER (PARTITION BY province_id ORDER BY birth_date) AS rank
+         ROW_NUMBER() OVER (PARTITION BY province_id ORDER BY birth_date) AS my_rank
   FROM patients
 ) p
-WHERE rank &lt;= 3;</code></pre>
+WHERE my_rank &lt;= 3;</code></pre>
 </div>
 </div>
 </div>
