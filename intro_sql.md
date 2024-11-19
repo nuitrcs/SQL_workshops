@@ -1,7 +1,7 @@
 # **Introduction to SQL**
 
 * [What is SQL](#what-is-sql)
-* [Database for this workshop](#database-for-this-workshop)
+* [Database for this tutorial](#database-for-this-tutorial)
 * [Comments in SQL](#comments-in-sql)
 * [`SELECT`](#select)
 * [`LIMIT`](#limit)
@@ -22,7 +22,7 @@
 
 ## What is SQL?
 
-SQL, which is an acronym for Structured Query Language, is a language widely used to interact with most relational databases. You can create, query, update, and delete databases using SQL. This workshop focuses on querying databases.
+SQL, which is an acronym for Structured Query Language, is a language widely used to interact with most relational databases. You can create, query, update, and delete databases using SQL. This tutorial focuses on querying databases.
 
 If you have experience with `dplyr` in R or `Pandas` in Python, you'll find that SQL is similar in many ways.
 
@@ -30,7 +30,7 @@ If you have experience with `dplyr` in R or `Pandas` in Python, you'll find that
 
 It’s important to note that, while SQL is one language, there are multiple dialects. There are [standards for SQL](https://blog.ansi.org/sql-standard-iso-iec-9075-2023-ansi-x3-135/#gref), but different vendors of database management systems provide various [versions of SQL syntax](https://www.datacamp.com/blog/sql-server-postgresql-mysql-whats-the-difference-where-do-i-start), such as MySQL, PostgreSQL, and SQLite. However, most of the syntax, particularly basic syntax, is very similar across dialects.
 
-## Database for this workshop
+## Database for this tutorial
 
 We're working with the `hospital` database from [sql-practice.com](https://www.sql-practice.com/). You can find the schema (the set of tables, their columns and types, and the relationships between them) in the left side bar > SQL Database > View Schema.
 
@@ -51,7 +51,7 @@ SELECT * from patients; -- another single line comment
 
 ### Exercise 1
 
-Take a look at the schema of the database. Think about a query that you would like to be able to make at the end of this workshop. Write down that query and the steps that you think you would need to take using a comment.
+Take a look at the schema of the database. Think about a query that you would like to be able to make at the end of this tutorial. Write down that query and the steps that you think you would need to take using a comment.
 
 ## `SELECT`
 
@@ -197,7 +197,7 @@ FROM patients
 WHERE patient_id IS NULL;
 ```
 
-Note that `NULL` is different than an empty string ('').
+Note that `NULL` is different than an empty string.
 
 There is also the opposite: `IS NOT NULL`.
 
@@ -324,7 +324,7 @@ FROM patients
 WHERE height = MAX(height);
 ```
 
-To achieve this, you can use a subquery, which we may learn about later.
+To achieve this, you can use a subquery (which is covered in the intermediate SQL tutorial).
 
 If we wanted to count the number of distinct values in a column, we can use the count function in combination with `distinct`:
 
@@ -398,7 +398,7 @@ Select the province\_id from the patients table that have more than 20 cities as
 
 ## Aliasing
 
-You can rename columns and tables in queries.  This will mostly be useful when we're joining tables together, but it can also be useful when you're working with functions. Or simply for convenience in looking at the output.
+You can rename columns and tables in queries.  This will mostly be useful when you're joining tables together, but it can also be useful when you're working with functions. Or simply for convenience in looking at the output.
 
 ```sql
 SELECT first_name, COUNT(*) AS patient_count
@@ -436,7 +436,7 @@ This tutorial provided an introduction to SQL. While this is a good starting pla
 
 This tutorial draws from a longer [introduction to databases workshop](https://github.com/nuitrcs/databases_workshop) taught by [Research Computing and Data Services at Northwestern University](https://www.it.northwestern.edu/departments/it-services-support/research/), as well as by this [resource guide](https://sites.northwestern.edu/researchcomputing/resource-guides/resource-guide-sql/). You can check them out to continue learning! 🧠💪
 
-One key aspect that this workshop didn't cover is how to connect to a database. We used [sql-practice.com](https://www.sql-practice.com/), which makes it very easy to run SQL in a web browser for an introductory workshop. But in research, you'll probably be connecting to a database from a programming language like R or Python. Here you can see [how to connect to a database using the `DBI` package in R](https://github.com/nuitrcs/databases_workshop/blob/master/r/r_databases.Rmd) and [how to connect to a database using the `psycopg2` package in Python](https://github.com/nuitrcs/databases_workshop/blob/master/python/postgresql_from_python.ipynb). If you are affiliated with Northwestern University and you run into a problem during your research, you can always [submit a consult request](https://services.northwestern.edu/TDClient/30/Portal/Requests/ServiceDet?ID=93).
+One key aspect that this tutorial didn't cover is how to connect to a database. We used [sql-practice.com](https://www.sql-practice.com/), which makes it very easy to run SQL in a web browser for an introductory tutorial. But in research, you'll probably be connecting to a database from a programming language like R or Python. Here you can see [how to connect to a database using the `DBI` package in R](https://github.com/nuitrcs/databases_workshop/blob/master/r/r_databases.Rmd) and [how to connect to a database using the `psycopg2` package in Python](https://github.com/nuitrcs/databases_workshop/blob/master/python/postgresql_from_python.ipynb). If you are affiliated with Northwestern University and you run into a problem during your research, you can always [submit a consult request](https://services.northwestern.edu/TDClient/30/Portal/Requests/ServiceDet?ID=93).
 
 ## Answers to the exercises
 
