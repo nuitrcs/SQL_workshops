@@ -387,12 +387,12 @@ between four tables. The lines between the tables show where there is a
 column in one table that is linked to a column in another table. These
 are called foreign keys. Foreign keys are used to link records in
 different tables.</p>
-<p>In the table names, there are key icons next to some columns. These
-columns are primary key columns. Primary keys uniquely identify records
-in the table they belong to. A primary key can be a single column or a
-combination of multiple columns. Primary keys must have unique values.
-They are frequently used to link tables to each other (although you
-could link tables with other columns too).</p>
+<p>In some of the tables, there are yellow key icons next to some
+columns. These columns are primary key columns. Primary keys uniquely
+identify records in the table they belong to. A primary key can be a
+single column or a combination of multiple columns. Primary keys must
+have unique values. They are frequently used to link tables to each
+other (although you could link tables with other columns too).</p>
 <p>Now we’ll learn how to join tables together. Diagrams such as <a href="https://images.app.goo.gl/U5RCPEhNaQuMn7y7A">this one</a> can be
 useful to understand the different types of joins. Please note that you
 can join more than two tables together.</p>
@@ -422,8 +422,8 @@ INNER JOIN admissions ON patients.patient_id = admissions.patient_id;</code></pr
 table name to the front of the column name when referencing them. You
 can do this anytime, but you typically only do it when you’re joining
 tables and there’s ambiguity.</p>
-<p>We can also group by, order by, and use other where clause conditions
-on the joined tables.</p>
+<p>We can also group by, order by, and use where clause conditions on
+the joined tables.</p>
 </div>
 <div id="exercise-2" class="section level3">
 <h3>Exercise 2</h3>
@@ -476,9 +476,9 @@ RIGHT JOIN admissions a ON p.patient_id = a.patient_id;</code></pre>
 </div>
 <div id="full-outer-join" class="section level3">
 <h3><code>FULL OUTER JOIN</code></h3>
-<p>A <code>FULL OUTER JOIN</code> is like doing a left and right join at
-the same time: you get rows that are in both tables, plus rows from both
-tables that don’t match the other table.</p>
+<p>A <code>FULL OUTER JOIN</code> is like doing a left and a right join
+at the same time: you get rows that are in both tables, plus rows from
+both tables that don’t match the other table.</p>
 <p>This join is less commonly used.</p>
 <p>The syntax is the same as the other joins.</p>
 </div>
@@ -641,12 +641,11 @@ admissions.</li>
 </div>
 <div id="window-functions" class="section level2">
 <h2>Window Functions</h2>
-<p>Window functions are special functions that let you perform
-calculations across a group of related rows while still keeping each row
-separate. Unlike aggregate functions (like <code>SUM</code> or
-<code>COUNT</code>), which combine multiple rows into one result, window
-functions keep all rows in your result and add extra calculated data to
-each.</p>
+<p>Window functions let you perform calculations across a group of
+related rows while still keeping each row separate. Unlike aggregate
+functions (like <code>SUM</code> or <code>COUNT</code>), which combine
+multiple rows into one result, window functions keep all rows in your
+result and add extra calculated data to each.</p>
 <p>For example, you can use window functions to:</p>
 <ul>
 <li>Calculate running totals: Add up values row by row, showing the
@@ -673,7 +672,9 @@ starting from 1.</li>
 <li><code>RANK()</code>: Assigns a ranking number to each row, with ties
 receiving the same number, and the next number being skipped.</li>
 <li><code>DENSE_RANK()</code>: Similar to <code>RANK()</code>, but
-without skipping numbers for ties.</li>
+without skipping numbers for ties. In contrast to
+<code>ROW_NUMBER()</code>, each row doesn’t receive a unique number.
+Ties get the same number.</li>
 <li><code>SUM()</code>, <code>AVG()</code>, etc.: Performs aggregate
 calculations over a specified window.</li>
 </ul>
@@ -693,8 +694,8 @@ way. Instead, it assigns unique numbers in the order they appear,
 effectively “breaking” ties arbitrarily (often based on internal row
 ordering in the database).</p>
 </div>
-<div id="partitioning-with-partition-by" class="section level4">
-<h4>Partitioning with <code>PARTITION BY</code></h4>
+<div id="partition-by" class="section level4">
+<h4><code>PARTITION BY</code></h4>
 <p>The <code>PARTITION BY</code> clause breaks the data into groups, and
 the window function is applied to each group independently.</p>
 <p>For example, if we want to rank patients by their admission date
@@ -933,10 +934,10 @@ FROM patients p;</code></pre>
 <pre class="sql"><code>SELECT p.province_id, p.patient_id, p.first_name, p.last_name, p.birth_date
 FROM (
   SELECT province_id, patient_id, first_name, last_name, birth_date,
-         ROW_NUMBER() OVER (PARTITION BY province_id ORDER BY birth_date) AS my_rank
+         ROW_NUMBER() OVER (PARTITION BY province_id ORDER BY birth_date) AS birth_rank
   FROM patients
 ) p
-WHERE my_rank &lt;= 3;</code></pre>
+WHERE birth_rank &lt;= 3;</code></pre>
 </div>
 </div>
 </div>

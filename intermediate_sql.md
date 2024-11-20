@@ -20,7 +20,7 @@ We're working with the `hospital` database from [sql-practice.com](https://www.s
 
 Looking at the database schema, we can see that information is split between four tables.  The lines between the tables show where there is a column in one table that is linked to a column in another table.  These are called foreign keys. Foreign keys are used to link records in different tables.
 
-In the table names, there are key icons next to some columns.  These columns are primary key columns. Primary keys uniquely identify records in the table they belong to.  A primary key can be a single column or a combination of multiple columns.  Primary keys must have unique values.  They are frequently used to link tables to each other (although you could link tables with other columns too).
+In some of the tables, there are yellow key icons next to some columns.  These columns are primary key columns. Primary keys uniquely identify records in the table they belong to.  A primary key can be a single column or a combination of multiple columns.  Primary keys must have unique values.  They are frequently used to link tables to each other (although you could link tables with other columns too).
 
 Now we'll learn how to join tables together. Diagrams such as [this one](https://images.app.goo.gl/U5RCPEhNaQuMn7y7A) can be useful to understand the different types of joins. Please note that you can join more than two tables together.
 
@@ -47,7 +47,7 @@ INNER JOIN admissions ON patients.patient_id = admissions.patient_id;
 
 Note that both tables have a column called patient\_id.  We add the table name to the front of the column name when referencing them. You can do this anytime, but you typically only do it when you're joining tables and there's ambiguity. 
 
-We can also group by, order by, and use other where clause conditions on the joined tables.  
+We can also group by, order by, and use where clause conditions on the joined tables.  
 
 ### Exercise 2
 
@@ -109,7 +109,7 @@ b) Are there doctors who have not seen a patient?
 
 ### `FULL OUTER JOIN`
 
-A `FULL OUTER JOIN` is like doing a left and right join at the same time: you get rows that are in both tables, plus rows from both tables that don't match the other table. 
+A `FULL OUTER JOIN` is like doing a left and a right join at the same time: you get rows that are in both tables, plus rows from both tables that don't match the other table. 
 
 This join is less commonly used.
 
@@ -259,7 +259,7 @@ b) Using a CTE, find the number of admissions each doctor has attended. Then, li
 
 ## Window Functions
 
-Window functions are special functions that let you perform calculations across a group of related rows while still keeping each row separate. Unlike aggregate functions (like `SUM` or `COUNT`), which combine multiple rows into one result, window functions keep all rows in your result and add extra calculated data to each.
+Window functions let you perform calculations across a group of related rows while still keeping each row separate. Unlike aggregate functions (like `SUM` or `COUNT`), which combine multiple rows into one result, window functions keep all rows in your result and add extra calculated data to each.
 
 For example, you can use window functions to:
 
@@ -285,7 +285,7 @@ Some common window functions include:
 
 - `ROW_NUMBER()`: Assigns a unique number to each row, starting from 1.
 - `RANK()`: Assigns a ranking number to each row, with ties receiving the same number, and the next number being skipped.
-- `DENSE_RANK()`: Similar to `RANK()`, but without skipping numbers for ties.
+- `DENSE_RANK()`: Similar to `RANK()`, but without skipping numbers for ties. In contrast to `ROW_NUMBER()`, each row doesn't receive a unique number. Ties get the same number.
 - `SUM()`, `AVG()`, etc.: Performs aggregate calculations over a specified window.
 
 #### Example: `ROW_NUMBER()`
@@ -303,7 +303,7 @@ This assigns a unique row number to each record, ordered by admission\_date.
 
 If there are ties (i.e., rows with identical values in admission\_date), `ROW_NUMBER()` does not treat them the same way. Instead, it assigns unique numbers in the order they appear, effectively "breaking" ties arbitrarily (often based on internal row ordering in the database).
 
-#### Partitioning with `PARTITION BY`
+#### `PARTITION BY`
 
 The `PARTITION BY` clause breaks the data into groups, and the window function is applied to each group independently.
 
@@ -531,8 +531,8 @@ c)
 SELECT p.province_id, p.patient_id, p.first_name, p.last_name, p.birth_date
 FROM (
   SELECT province_id, patient_id, first_name, last_name, birth_date,
-         ROW_NUMBER() OVER (PARTITION BY province_id ORDER BY birth_date) AS my_rank
+         ROW_NUMBER() OVER (PARTITION BY province_id ORDER BY birth_date) AS birth_rank
   FROM patients
 ) p
-WHERE my_rank <= 3;
+WHERE birth_rank <= 3;
 ```
